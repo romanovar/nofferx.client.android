@@ -1,5 +1,10 @@
 package com.nofferx.lib;
 
+import android.renderscript.ScriptGroup;
+import android.util.Xml;
+
+import com.nofferx.helper.XMLParser;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -10,27 +15,19 @@ import java.net.URL;
 /**
  * Created by Rumi on 1/11/2016.
  */
-public class HandleXML {
-    private XmlPullParserFactory xmlFactoryObject;
+public class HTTPConnector{
+
     private String urlString = "";
     public volatile boolean parsingComplete = true;
 
-    public HandleXML()
-    {
-        this.urlString = "";
-    }
-    public HandleXML(String url){
-        this.urlString = url;
-    }
-
-    public void fetchXML(){
-        Thread thread = new Thread(new Runnable(){
+    public void fetchXML(final String param, XMLParser x){
+        final String baseURL = "http://192.168.2.10:8080/com.nofferx.rest/rest/api/";
+        final XMLParser parse = x;
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-//                    URL url = new URL(urlString);
-                    URL url = new URL("http://192.168.2.11:8080/com.nofferx.rest/rest/api/test");
-                            //"user/register/email=3&password=3&tel=3");
+                    URL url = new URL(baseURL + param);
                     HttpURLConnection conn = (HttpURLConnection)
                             url.openConnection();
                     conn.setReadTimeout(10000 /* milliseconds */);
@@ -40,13 +37,10 @@ public class HandleXML {
                     conn.connect();
                     InputStream stream = conn.getInputStream();
 
-                    xmlFactoryObject = XmlPullParserFactory.newInstance();
-                    XmlPullParser myparser = xmlFactoryObject.newPullParser();
+                    // Parse
+                    parse.callbackHistory(stream);
 
-                    myparser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES
-                            , false);
-                    myparser.setInput(stream, null);
-     //               parseXMLAndStoreIt(myparser);
+
                     stream.close();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -54,10 +48,6 @@ public class HandleXML {
                 }
             }
         });
-
         thread.start();
-
-
     }
-
 }
