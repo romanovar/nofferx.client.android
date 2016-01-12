@@ -3,6 +3,8 @@ package com.example.rumi.client_nofferx;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.SYSTEM_ALERT_WINDOW;
 
 /**
  * A login screen that offers login via email/password.
@@ -51,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+    public static final String PREFS_NAME = "NofferxLogin";
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -92,6 +96,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        //Attemp automatic login
+        verifyAccess();
+
     }
 
     private void populateAutoComplete() {
@@ -184,6 +192,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            
+
+
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
@@ -310,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             try {
                 // Simulate network access.
-                Thread.sleep(2000);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 return false;
             }
@@ -323,7 +334,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
 
-            // TODO: register the new account here.
+
             return true;
         }
 
@@ -333,7 +344,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("email", mEmail);
+                editor.putString("password", mPassword);
+                editor.commit();
+
+                loginSuccess(mEmail);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -345,6 +363,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    /**
+     * Instantiate a new activity for the user and save the user
+     * details in the shared storage.
+     * @param userEmail
+     */
+    protected void loginSuccess(String userEmail){
+        Intent myIntent;
+        myIntent = new Intent(LoginActivity.this , MainActivity.class);
+        myIntent.putExtra("email", userEmail); //Optional parameters
+        LoginActivity.this.startActivity(myIntent);
+        finish();
+
+    }
+
+    /**
+     * Checks whether the login was already done
+     * @return
+     */
+    protected boolean verifyAccess(){
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String userEmail = settings.getString("email", "");
+        if(!userEmail.equals("")){
+            // if the user email is really set
+            loginSuccess(userEmail);
+            return true;
+        }
+        return false;
+
     }
 }
 
