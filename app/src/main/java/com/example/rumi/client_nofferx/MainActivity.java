@@ -92,9 +92,10 @@ public class MainActivity extends AppCompatActivity
             this.startActivity(myIntent);
 
         } else if (id == R.id.log_out) {
-
+            this.logOut();
         } else if (id == R.id.history) {
-
+            myIntent = new Intent(this, HistoryActivity.class);
+            this.startActivity(myIntent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

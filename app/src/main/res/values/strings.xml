@@ -109,4 +109,10 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="organize_dayout">Maximum budget:</string>
+    <string name="radius">Radius:</string>
+    <string name="smoking_area">Smoking area:</string>
+    <string name="parking_area">Parking area:</string>
+    <string name="organize_day_out">Please specify your preferences:</string>
 </resources>
