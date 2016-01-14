@@ -31,9 +31,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.nofferx.models.HistorySubject;
 import com.nofferx.models.IObserver;
+import com.nofferx.parser.XMLGetHistoryParser;
+import com.nofferx.parser.XMLSimpleResponseParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -48,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
+    private HistorySubject historySubject;
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -109,6 +113,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 openRegisterForm();
             }
         });
+
+        this.historySubject = new HistorySubject();
+        this.historySubject.attach(this);
+
     }
 
     private void openRegisterForm() {
@@ -206,9 +214,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            
-
-
+            Login(email, password);
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
@@ -310,7 +316,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     @Override
     public void update() {
-
+       String response = this.historySubject.getHistoryList().get(0).get("response");
+        if(response.equals("Success")){
+            loginSuccess(((EditText)mEmailView.getText()).toString());
+        }
     }
 
 
@@ -416,6 +425,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         return false;
 
+    }
+
+    private void Login(String email, String pass){
+        String url = "http://192.168.2.11:8080/com.nofferx.rest/rest/api/user/authenticate/email="+email+"&password="+pass;
+        XMLSimpleResponseParser simpleParser = new XMLSimpleResponseParser(url, this.historySubject);
+        ArrayList<HashMap<String,String>> list = this.historySubject.getHistoryList();
     }
 }
 

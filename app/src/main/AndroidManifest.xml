@@ -41,17 +41,13 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-<<<<<<< HEAD
+
         <activity android:name=".QRCodeActivity" />
         <activity android:name=".CompanyActivity"></activity>
-=======
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register" />
-        <activity
-            android:name=".RegisterActivity"
-            android:label="@string/title_activity_register"></activity>
->>>>>>> 2c5633ebd2dc7b647f63e05cfde015cddfa1b755
+
     </application>
 
 </manifest>

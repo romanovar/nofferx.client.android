@@ -3,6 +3,8 @@ package com.example.rumi.client_nofferx;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -28,8 +30,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.nofferx.models.HistorySubject;
+import com.nofferx.models.IObserver;
+import com.nofferx.parser.XMLSimpleResponseParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -37,8 +45,9 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, IObserver {
 
+    private HistorySubject historySubject;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -59,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mTelephone;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -71,6 +81,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mTelephone = (EditText)findViewById(R.id.editText4);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -92,6 +103,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        this.historySubject = new HistorySubject();
+        this.historySubject.attach(this);
     }
 
     private void populateAutoComplete() {
@@ -184,6 +198,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            Register(email, password, mTelephone.getText().toString());
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
@@ -279,6 +294,25 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView.setAdapter(adapter);
     }
 
+    @Override
+    public void update() {
+        Context context = getApplicationContext();
+        CharSequence text;
+        int duration = Toast.LENGTH_LONG;
+
+
+        String response = this.historySubject.getHistoryList().get(0).get("response");
+        if(response.equals("Success")){
+            String email = mEmailView.getText().toString();
+            RegisterSuccess(email);
+        }
+        else{
+            text = "Registration failed!";
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+    }
+
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -345,6 +379,23 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    protected void RegisterSuccess(String userEmail){
+        Intent myIntent;
+        myIntent = new Intent(RegisterActivity.this , LoginActivity.class);
+        myIntent.putExtra("email", userEmail); //Optional parameters
+        RegisterActivity.this.startActivity(myIntent);
+        finish();
+    }
+    protected void RegisterFail(){
+
+    }
+    private void Register(String email, String pass, String telephone){
+        String url = "http://192.168.2.11:8080/com.nofferx.rest/rest/api/user/register/email="+email+"&password="+pass+
+                        "&tel="+telephone;
+        XMLSimpleResponseParser simpleParser = new XMLSimpleResponseParser(url, this.historySubject);
+        ArrayList<HashMap<String,String>> list = this.historySubject.getHistoryList();
     }
 }
 
