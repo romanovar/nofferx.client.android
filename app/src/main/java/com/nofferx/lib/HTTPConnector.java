@@ -1,12 +1,7 @@
 package com.nofferx.lib;
 
-import android.renderscript.ScriptGroup;
-import android.util.Xml;
-
-import com.nofferx.helper.XMLParser;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
+import com.nofferx.parser.XMLGetHistoryParser;
+import com.nofferx.parser.XMLParser;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -19,9 +14,9 @@ public class HTTPConnector{
 
     private String urlString = "";
     public volatile boolean parsingComplete = true;
+    final String baseURL = "http://192.168.2.11:8080/com.nofferx.rest/rest/api/";
 
-    public void fetchXML(final String param, XMLParser x){
-        final String baseURL = "http://192.168.2.10:8080/com.nofferx.rest/rest/api/";
+    public void fetchXMLAsync(final String param, XMLParser x){
         final XMLParser parse = x;
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -38,16 +33,36 @@ public class HTTPConnector{
                     InputStream stream = conn.getInputStream();
 
                     // Parse
-                    parse.callbackHistory(stream);
-
-
+                    parse.callback(stream);
                     stream.close();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    // Handle errors
                     parsingComplete = false;
                 }
             }
         });
         thread.start();
+    }
+
+    public InputStream fetchXMLSync(final String param){
+        InputStream stream = null;
+        try {
+            URL url = new URL(baseURL + param);
+            HttpURLConnection conn = (HttpURLConnection)
+                    url.openConnection();
+            conn.setReadTimeout(10000 /* milliseconds */);
+            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            conn.connect();
+            stream = conn.getInputStream();
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle errors
+            parsingComplete = false;
+        }
+        return stream;
     }
 }

@@ -8,6 +8,6 @@ import java.util.HashMap;
  */
 public interface ISubject {
     public void attach(IObserver i);
-    public void setState(ArrayList<ArrayList<HashMap<String,String>>> xmlList);
+    public void setState(ArrayList<HashMap<String,String>> xmlList);
     public void notifyObserver();
 }

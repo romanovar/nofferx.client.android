@@ -1,47 +1,59 @@
 package com.example.rumi.client_nofferx;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.example.rumi.client_nofferx.customadapter.*;
 
-public class HistoryActivity extends AppCompatActivity {
+import com.nofferx.parser.XMLGetHistoryParser;
+import com.nofferx.models.HistorySubject;
+import com.nofferx.models.IObserver;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class HistoryActivity extends AppCompatActivity implements IObserver {
     ListView listView;
+    HistorySubject historySubject;
+
+    // Defined Array values to show in ListView
+    String[] values = new String[] {
+            "Loading..."
+    };
+    ArrayList<String> value;
+
+    ArrayAdapter<String> historyAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-//        ListView listView = new ListView()
-
         listView = (ListView) findViewById(R.id.history_list);
 
-        // Defined Array values to show in ListView
-        String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
-
-        // Define a new Adapter
-        // First parameter - Context
-        // Second parameter - Layout for the row
-        // Third parameter - ID of the TextView to which the data is written
-        // Forth - the Array of data
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        value = new ArrayList<>();
+        for(String i : values){
+            value.add(i);
+        }
 
 
         // Assign adapter to ListView
-        listView.setAdapter(adapter);
+        historyAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, value);
+
+
+        listView.setAdapter(historyAdapter);
+
+
+
 
         // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,10 +63,17 @@ public class HistoryActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 // ListView Clicked item index
-                int itemPosition     = position;
+                int itemPosition = position;
 
                 // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
+                String itemValue = (String) listView.getItemAtPosition(position);
+
+//                Intent myIntent;
+//                myIntent = new Intent(LoginActivity.this , MainActivity.class);
+//                myIntent.putExtra("email", userEmail); //Optional parameters
+//                LoginActivity.this.startActivity(myIntent);
+//                finish();
+
 
                 // Show Alert
                 Toast.makeText(getApplicationContext(),
@@ -63,5 +82,49 @@ public class HistoryActivity extends AppCompatActivity {
             }
 
         });
+
+        this.historySubject = new HistorySubject();
+        this.historySubject.attach(this);
+        XMLGetHistoryParser n = new XMLGetHistoryParser("lore@lore.lore", 0, 1, this.historySubject);
+        ArrayList<HashMap<String,String>> list = this.historySubject.getHistoryList();
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void update() {
+
+
+        ArrayList<String> history = new ArrayList<>();
+
+        ArrayList<HashMap<String,String>> hr =  this.historySubject.getHistoryList();
+
+        String entry = "";
+        for(int i = 0 ; i < hr.size(); i ++){
+
+            String time = (String) hr.get(i).get("time");
+            String title = (String) hr.get(i).get("title");
+            entry += time + "   "+ title;
+            history.add(entry);
+        }
+        value.clear();
+
+        if(history.size() > 0){
+            for(String h : history){
+                value.add(h);
+            }
+        } else {
+            value.add("Nothing to show");
+        }
+        historyAdapter.notifyDataSetChanged();
+    }
+
 }

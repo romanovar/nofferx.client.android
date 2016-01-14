@@ -13,13 +13,19 @@ import android.widget.EditText;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.nofferx.models.IObserver;
+import com.nofferx.parser.XMLGetDayOutParser;
 
-public class OrganizeDayOut extends AppCompatActivity {
+public class OrganizeDayOut extends AppCompatActivity implements IObserver {
 
     String radiusString;
     String budgetString;
     boolean smokingArea;
     boolean parkingArea;
+
+
+    private XMLGetDayOutParser goudp;
+    private OrganizeDayOut organizeDayOutSubject;
 
 
     @Override
@@ -38,6 +44,10 @@ public class OrganizeDayOut extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        this.organizeDayOutSubject = new OrganizeDayOut();
+//        this.goudp = new XMLGetDayOutParser(userEmail, String location, double budget, int distance);
+
     }
 
     private void GetUserValues() {
@@ -60,4 +70,8 @@ public class OrganizeDayOut extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void update() {
+
+    }
 }

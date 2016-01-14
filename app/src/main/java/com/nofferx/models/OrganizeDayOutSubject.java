@@ -6,7 +6,7 @@ import java.util.HashMap;
 /**
  * Created by lorenzo on 12-1-16.
  */
-public class HistorySubject implements ISubject
+public class OrganizeDayOutSubject implements ISubject
 {
     private IObserver ob;
     private ArrayList<HashMap<String,String>> historyList = new ArrayList<>();
