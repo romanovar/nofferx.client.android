@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.log_out) {
             this.logOut();
+            finish();
         } else if (id == R.id.history) {
             myIntent = new Intent(this, HistoryActivity.class);
             this.startActivity(myIntent);

@@ -3,8 +3,8 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -115,4 +115,7 @@
     <string name="smoking_area">Smoking area:</string>
     <string name="parking_area">Parking area:</string>
     <string name="organize_day_out">Please specify your preferences:</string>
+    <string name="title_activity_register">Register</string>
+    <string name="password">Confirm password</string>
+    <string name="action_sign_in">Sign in or register</string>
 </resources>
