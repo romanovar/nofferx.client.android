@@ -131,6 +131,9 @@ public class HistoryActivity extends AppCompatActivity implements IObserver {
         } else {
             value.add("Nothing to show");
         }
+
+        historyAdapter.notifyDataSetChanged();
+        listView.invalidate();
     }
 
 }

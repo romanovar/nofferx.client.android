@@ -102,8 +102,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.retrieved_offers) {
             myIntent = new Intent(this, RedeemedOffers.class);
             this.startActivity(myIntent);
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

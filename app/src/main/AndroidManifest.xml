@@ -32,7 +32,7 @@
             android:name=".OrganizeDayOut"
             android:label="@string/title_activity_organize_day_out"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".HistoryActivity" />
+        <activity android:name=".HistoryActivity" android:label="@string/history_activity"/>
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -49,7 +49,7 @@
             android:label="@string/title_activity_register"></activity>
         <activity
             android:name=".RedeemedOffers"
-            android:label="@string/title_activity_register"></activity>
-    </application>
+            android:label="@string/redeemed_offers_activity"></activity>
+        </application>
 
 </manifest>

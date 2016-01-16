@@ -26,7 +26,7 @@ public class CompanyActivity extends AppCompatActivity implements IObserver {
 
         // Show Alert
         Toast.makeText(getApplicationContext(),
-                "Offer id | " + id , Toast.LENGTH_LONG)
+                "Loading..." + id , Toast.LENGTH_LONG)
                 .show();
 
         this.historySubject = new HistorySubject();
