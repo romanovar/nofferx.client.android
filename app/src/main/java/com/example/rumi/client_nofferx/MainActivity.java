@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.rumi.client_nofferx.customadapter.OfferActivity;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -98,9 +100,11 @@ public class MainActivity extends AppCompatActivity
             myIntent = new Intent(this, HistoryActivity.class);
             this.startActivity(myIntent);
         } else if (id == R.id.nav_share) {
-
+            myIntent = new Intent(this, OfferActivity.class);
+            this.startActivity(myIntent);
         } else if (id == R.id.nav_send) {
-
+            myIntent = new Intent(this, MapsActivity.class);
+            this.startActivity(myIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
