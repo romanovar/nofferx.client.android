@@ -39,7 +39,7 @@
             android:name=".OrganizeDayOut"
             android:label="@string/title_activity_organize_day_out"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".HistoryActivity" />
+        <activity android:name=".HistoryActivity" android:label="@string/history_activity"/>
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -48,11 +48,12 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".QRCodeActivity" />
-        <activity android:name=".CompanyActivity" />
+        <activity android:name=".QRCodeActivity" android:label="@string/title_activity_register">
+        </activity>
+        <activity android:name=".CompanyActivity" android:label="@string/viewed_offer"></activity>
         <activity
             android:name=".RegisterActivity"
-            android:label="@string/title_activity_register" />
+            android:label="@string/title_activity_register"></activity>
         <activity
             android:name=".customadapter.OfferActivity"
             android:label="@string/title_activity_offer"
@@ -72,6 +73,9 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
-    </application>
+        <activity
+            android:name=".RedeemedOffers"
+            android:label="@string/redeemed_offers_activity"></activity>
+        </application>
 
 </manifest>

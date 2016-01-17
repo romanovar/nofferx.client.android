@@ -116,8 +116,11 @@
     <string name="parking_area">Parking area:</string>
     <string name="organize_day_out">Please specify your preferences:</string>
     <string name="title_activity_register">Register</string>
+    <string name="redeemed_offers_activity">Redeemed Offers</string>
+    <string name="history_activity">Your History</string>
     <string name="password">Confirm password</string>
     <string name="action_sign_in">Sign in or register</string>
+    <string name="viewed_offer">Viewed offer</string>
     <string name="title_activity_offer">OfferActivity</string>
     <string name="title_activity_maps">Map</string>
 </resources>

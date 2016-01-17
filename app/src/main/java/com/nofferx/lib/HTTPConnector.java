@@ -14,7 +14,7 @@ public class HTTPConnector{
 
     private String urlString = "";
     public volatile boolean parsingComplete = true;
-    final String baseURL = "http://192.168.2.11:8080/com.nofferx.rest/rest/api/";
+    final String baseURL = "http://192.168.1.69:8080/com.nofferx.rest/rest/api/";
 
     public void fetchXMLAsync(final String param, XMLParser x){
         final XMLParser parse = x;

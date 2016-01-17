@@ -2,23 +2,25 @@ package com.example.rumi.client_nofferx;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.nofferx.parser.XMLGetHistoryParser;
 import com.nofferx.models.HistorySubject;
 import com.nofferx.models.IObserver;
+import com.nofferx.parser.XMLGetHistoryParser;
+import com.nofferx.parser.XMLGetRedeemedOfferParser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
-public class HistoryActivity extends AppCompatActivity implements IObserver {
+public class RedeemedOffers extends AppCompatActivity implements IObserver {
     ListView listView;
     HistorySubject historySubject;
 
@@ -27,7 +29,8 @@ public class HistoryActivity extends AppCompatActivity implements IObserver {
             "Loading..."
     };
     ArrayList<String> value;
-
+    ArrayList<String> codes;
+    ArrayList<String> titles;
     ArrayAdapter<String> historyAdapter;
 
 
@@ -37,8 +40,9 @@ public class HistoryActivity extends AppCompatActivity implements IObserver {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         listView = (ListView) findViewById(R.id.history_list);
-
+        codes = new ArrayList<>();
         value = new ArrayList<>();
+        titles = new ArrayList<>();
         for(String i : values){
             value.add(i);
         }
@@ -61,36 +65,39 @@ public class HistoryActivity extends AppCompatActivity implements IObserver {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
+
                 // ListView Clicked item index
                 int itemPosition = position;
 
                 // ListView Clicked item value
                 String itemValue = (String) listView.getItemAtPosition(position);
                 if(itemValue.equals("Nothing to show")){ return; }
-
                 // Get id of the offer
                 int value = Integer.parseInt(itemValue.split("-")[0]);
 
                 Intent myIntent;
-                myIntent = new Intent( HistoryActivity.this , CompanyActivity.class);
+                myIntent = new Intent( RedeemedOffers.this , QRCodeActivity.class);
 
                 myIntent.putExtra("offerId", value); //Optional parameters
-                HistoryActivity.this.startActivity(myIntent);
+                myIntent.putExtra("title", titles.get(position));
+                myIntent.putExtra("code", codes.get(position)); //Optional parameters
+
+                RedeemedOffers.this.startActivity(myIntent);
             }
 
         });
 
         this.historySubject = new HistorySubject();
         this.historySubject.attach(this);
-
         // GET Email
         SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_NAME, 0);
         String userEmail = settings.getString("email", "");
 
+
         // TODO remove the following :
         userEmail = "lore@lore.lore";
 
-        XMLGetHistoryParser n = new XMLGetHistoryParser( userEmail , 0, 1, this.historySubject);
+        XMLGetRedeemedOfferParser n = new XMLGetRedeemedOfferParser( userEmail , 0, 1, this.historySubject);
         ArrayList<HashMap<String,String>> list = this.historySubject.getHistoryList();
     }
 
@@ -108,30 +115,34 @@ public class HistoryActivity extends AppCompatActivity implements IObserver {
     public void update() {
 
 
-        ArrayList<String> history = new ArrayList<>();
+        ArrayList<String> offer = new ArrayList<>();
 
         ArrayList<HashMap<String,String>> hr =  this.historySubject.getHistoryList();
+        codes.clear();
 
         String entry = "";
         for(int i = 0 ; i < hr.size(); i ++){
 
-            String offerId = (String) hr.get(i).get("offer_id");
-            String time = (String) hr.get(i).get("time");
+            String offerId = (String) hr.get(i).get("offer_idOffer");
+            String time = (String) hr.get(i).get("endDate");
             String title = (String) hr.get(i).get("title");
 
+
             entry +=  offerId+"-" + "    " + time + "   "+ title;
-            history.add(entry);
+            offer.add(entry);
+            codes.add(hr.get(i).get("code"));
+            titles.add(hr.get(i).get("title"));
         }
         value.clear();
 
-        if(history.size() > 0){
-            for(String h : history){
+
+        if(offer.size() > 0){
+            for(String h : offer){
                 value.add(h);
             }
         } else {
             value.add("Nothing to show");
         }
-
         historyAdapter.notifyDataSetChanged();
         listView.invalidate();
     }
