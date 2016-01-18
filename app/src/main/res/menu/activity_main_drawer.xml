@@ -9,11 +9,15 @@
         <item
             android:id="@+id/retrieved_offers"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Retrieved Offers" />
+            android:title="Redeemed Offers" />
         <item
             android:id="@+id/history"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="History" />
+        <item
+            android:id="@+id/review_offers"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Review/Rate Offers" />
         <item
             android:id="@+id/log_out"
             android:icon="@drawable/ic_menu_manage"

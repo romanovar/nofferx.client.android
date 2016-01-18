@@ -24,10 +24,16 @@ public class XMLGetRedeemedOfferParser implements XMLParser {
     private ISubject h;
 
 
-    public XMLGetRedeemedOfferParser(String email, int offset, int limit, ISubject h)
+    public XMLGetRedeemedOfferParser(String email, int offset, int limit, ISubject h, boolean filter)
     {
         hp = new HTTPConnector();
-        String httpRequest = "user/get/retrievedoffers/id="+email+"&limit="+limit+"&offset="+offset;
+        String httpRequest;
+        if(!filter) {
+            httpRequest = "user/get/retrievedoffers/id=" + email + "&limit=" + limit + "&offset=" + offset;
+        }
+        else{
+            httpRequest = "user/get/usedoffers/id=" + email + "&limit=" + limit + "&offset=" + offset;
+        }
         this.h = h;
         hp.fetchXMLAsync(httpRequest, this);
     }

@@ -12,15 +12,12 @@ import android.widget.ListView;
 
 import com.nofferx.models.HistorySubject;
 import com.nofferx.models.IObserver;
-import com.nofferx.parser.XMLGetHistoryParser;
 import com.nofferx.parser.XMLGetRedeemedOfferParser;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
-public class RedeemedOffers extends AppCompatActivity implements IObserver {
+public class VisitedOffers extends AppCompatActivity implements IObserver {
     ListView listView;
     HistorySubject historySubject;
 
@@ -76,13 +73,13 @@ public class RedeemedOffers extends AppCompatActivity implements IObserver {
                 int value = Integer.parseInt(itemValue.split("-")[0]);
 
                 Intent myIntent;
-                myIntent = new Intent( RedeemedOffers.this , QRCodeActivity.class);
+                myIntent = new Intent( VisitedOffers.this , QRCodeActivity.class);
 
                 myIntent.putExtra("offerId", value); //Optional parameters
                 myIntent.putExtra("title", titles.get(position));
                 myIntent.putExtra("code", codes.get(position)); //Optional parameters
 
-                RedeemedOffers.this.startActivity(myIntent);
+                VisitedOffers.this.startActivity(myIntent);
             }
 
         });
@@ -95,9 +92,9 @@ public class RedeemedOffers extends AppCompatActivity implements IObserver {
 
 
         // TODO remove the following :
-        userEmail = "lore@lore.lore";
+        userEmail = "klara@cuvox.de";
 
-        XMLGetRedeemedOfferParser n = new XMLGetRedeemedOfferParser( userEmail , 0, 1, this.historySubject, false);
+        XMLGetRedeemedOfferParser n = new XMLGetRedeemedOfferParser( userEmail , 0, 1, this.historySubject, true);
         ArrayList<HashMap<String,String>> list = this.historySubject.getHistoryList();
     }
 
